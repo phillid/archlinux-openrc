@@ -1,0 +1,37 @@
+# Maintainer : David Phillips <david sighup d.t nz>
+
+pkgname=initscripts-phillid
+pkgver=r6.6560ea7
+pkgrel=1
+pkgdesc='Small collection of initscripts for Arch Linux'
+arch=('any')
+url='https://github.com/phillid/initscripts'
+license=('unknown')
+depends=() # FIXME
+optdepends=() # FIXME
+backup=('etc/openrc/conf.d')
+source=("$pkgname::git+https://github.com/phillid/initscripts.git")
+sha512sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${pkgname}"
+    make
+}
+
+package() {
+    cd "${pkgname}"
+
+    _openrcdir="${pkgdir}/etc/openrc/"
+    mkdir -p "${_openrcdir}"
+    cp -r conf.d "${_openrcdir}"
+    cp -r init.d "${_openrcdir}"
+
+    # trick taken from openrc-arch-services-git
+    cd "${pkgdir}"
+    backup=("etc/openrc/conf.d/"*)
+}
