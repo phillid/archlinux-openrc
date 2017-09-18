@@ -1,12 +1,13 @@
 # Maintainer : David Phillips <david sighup d.t nz>
 
-pkgname=initscripts-phillid
-pkgver=r6.6560ea7
+pkgname=initscripts-phillid-git
+pkgver=r11.a078a88
 pkgrel=1
 pkgdesc='Small collection of initscripts for Arch Linux'
 arch=('any')
 url='https://github.com/phillid/initscripts'
 license=('unknown')
+conflicts=('initscripts-phillid')
 depends=() # FIXME
 optdepends=() # FIXME
 backup=('etc/openrc/conf.d')
@@ -26,10 +27,7 @@ build() {
 package() {
     cd "${pkgname}"
 
-    _openrcdir="${pkgdir}/etc/openrc/"
-    mkdir -p "${_openrcdir}"
-    cp -r conf.d "${_openrcdir}"
-    cp -r init.d "${_openrcdir}"
+    make DESTDIR="${pkgdir}" OPENRC_DIR="/etc/openrc" install
 
     # trick taken from openrc-arch-services-git
     cd "${pkgdir}"
